@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a1a1a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Молия</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Главный экран -->
+    <div id="app" class="app">
+        <!-- Заголовок -->
+        <header class="header">
+            <h1 class="logo">Молия</h1>
+            <button class="icon-btn" id="menuBtn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </button>
+        </header>
+
+        <!-- Основной контент -->
+        <main class="main" id="mainContent">
+            <!-- Календарь (главная страница) -->
+            <section id="calendarView" class="view active">
+                <div class="calendar-header">
+                    <button class="nav-btn" id="prevMonth">‹</button>
+                    <h2 id="currentMonth">Январь 2026</h2>
+                    <button class="nav-btn" id="nextMonth">›</button>
+                </div>
+                
+                <div class="calendar-grid" id="calendarGrid"></div>
+                
+                <div class="quick-actions">
+                    <button class="quick-btn income" id="addIncomeBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14M5 12h14"></path>
+                        </svg>
+                        <span>Доход</span>
+                    </button>
+                    <button class="quick-btn expense" id="addExpenseBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14"></path>
+                        </svg>
+                        <span>Расход</span>
+                    </button>
+                </div>
+
+                <!-- Всплывающая панель статистики -->
+                <div class="stats-panel" id="statsPanel">
+                    <div class="stats-header">
+                        <h3 id="statsTitle">Статистика</h3>
+                        <button class="close-stats" id="closeStats">×</button>
+                    </div>
+                    <div class="stats-content">
+                        <div class="stat-item">
+                            <span class="stat-label">Доходы</span>
+                            <span class="stat-value income" id="statsIncome">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Расходы</span>
+                            <span class="stat-value expense" id="statsExpense">0</span>
+                        </div>
+                        <div class="stat-divider"></div>
+                        <div class="stat-item">
+                            <span class="stat-label">Итого</span>
+                            <span class="stat-value" id="statsTotal">0</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Список операций -->
+                    <div id="statsTransactions" class="stats-transactions"></div>
+                </div>
+            </section>
+
+            <!-- Дашборд -->
+            <section id="dashboardView" class="view">
+                <div class="balance-card">
+                    <div class="balance-label">Общий баланс</div>
+                    <div class="balance-amount" id="totalBalance">0</div>
+                    <div class="balance-currency">сум</div>
+                </div>
+
+                <div class="sections">
+                    <div class="section">
+                        <div class="section-header">
+                            <h2>Активы</h2>
+                            <button class="add-btn" id="addAssetBtn">+</button>
+                        </div>
+                        <div id="assetsList" class="items-list"></div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-header">
+                            <h2>Последние операции</h2>
+                        </div>
+                        <div id="transactionsList" class="transactions-list"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- История операций -->
+            <section id="historyView" class="view">
+                <div class="view-header">
+                    <button class="back-btn" id="backFromHistory">←</button>
+                    <h2>История операций</h2>
+                </div>
+
+                <div class="history-filters">
+                    <select id="historyFilter" class="filter-select">
+                        <option value="all">Все операции</option>
+                        <option value="income">Только доходы</option>
+                        <option value="expense">Только расходы</option>
+                    </select>
+                    <select id="historyPeriod" class="filter-select">
+                        <option value="all">За все время</option>
+                        <option value="month">Текущий месяц</option>
+                        <option value="week">Последняя неделя</option>
+                    </select>
+                </div>
+
+                <div id="historyList" class="history-list"></div>
+            </section>
+
+            <!-- Управление активами -->
+            <section id="assetsView" class="view">
+                <div class="view-header">
+                    <button class="back-btn" id="backFromAssets">←</button>
+                    <h2>Управление активами</h2>
+                </div>
+                
+                <div class="tabs">
+                    <button class="tab active" data-tab="banks">Банки</button>
+                    <button class="tab" data-tab="cards">Карты</button>
+                    <button class="tab" data-tab="cash">Наличные</button>
+                    <button class="tab" data-tab="deposits">Вклады</button>
+                    <button class="tab" data-tab="credits">Кредиты</button>
+                </div>
+
+                <div id="tabContent" class="tab-content"></div>
+            </section>
+
+            <!-- Калькулятор вкладов -->
+            <section id="depositCalculatorView" class="view">
+                <div class="view-header">
+                    <button class="back-btn" id="backFromCalculator">←</button>
+                    <h2>Калькулятор вкладов</h2>
+                </div>
+
+                <form id="calculatorForm" class="form">
+                    <div class="form-group">
+                        <label>Начальная сумма</label>
+                        <input type="number" id="calcAmount" placeholder="1000000" value="1000000" step="0.01" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Процентная ставка (годовая %)</label>
+                        <input type="number" id="calcRate" placeholder="14" step="0.01" value="14" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Срок (месяцев)</label>
+                        <input type="number" id="calcTerm" placeholder="12" value="12" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" id="calcCapitalize" style="width: auto;">
+                            <span>Капитализация процентов</span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Пополнение 1 числа месяца</label>
+                        <input type="number" id="calcTopup1" placeholder="0" value="0" step="0.01">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Пополнение 15 числа месяца</label>
+                        <input type="number" id="calcTopup2" placeholder="0" value="0" step="0.01">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Рассчитать</button>
+                </form>
+
+                <div id="calculatorResult" class="calculator-result"></div>
+            </section>
+
+            <!-- Форма транзакции -->
+            <section id="transactionView" class="view">
+                <div class="view-header">
+                    <button class="back-btn" id="backFromTransaction">←</button>
+                    <h2 id="transactionTitle">Новая операция</h2>
+                </div>
+                <form id="transactionForm" class="form">
+                    <input type="hidden" id="transactionType">
+                    
+                    <div class="form-group">
+                        <label>Сумма</label>
+                        <input type="number" id="transactionAmount" placeholder="0" step="0.01" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Источник</label>
+                        <select id="transactionSource" required>
+                            <option value="">Выберите</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Дата</label>
+                        <input type="date" id="transactionDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Категория</label>
+                        <input type="text" id="transactionCategory" placeholder="Например: Продукты">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Комментарий</label>
+                        <textarea id="transactionComment" rows="3" placeholder="Необязательно"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Сохранить</button>
+                </form>
+            </section>
+        </main>
+
+        <!-- Меню -->
+        <div id="menuOverlay" class="menu-overlay">
+            <div class="menu">
+                <button class="menu-close" id="closeMenu">×</button>
+                <nav class="menu-nav">
+                    <a href="#" id="menuCalendar" class="menu-item active">
+                        <span>Календарь</span>
+                    </a>
+                    <a href="#" id="menuDashboard" class="menu-item">
+                        <span>Дашборд</span>
+                    </a>
+                    <a href="#" id="menuHistory" class="menu-item">
+                        <span>История операций</span>
+                    </a>
+                    <a href="#" id="menuAssets" class="menu-item">
+                        <span>Активы</span>
+                    </a>
+                    <a href="#" id="menuCalculator" class="menu-item">
+                        <span>Калькулятор вкладов</span>
+                    </a>
+                    <div class="menu-divider"></div>
+                    <a href="#" id="menuExport" class="menu-item">
+                        <span>Экспорт данных</span>
+                    </a>
+                    <a href="#" id="menuImport" class="menu-item">
+                        <span>Импорт данных</span>
+                    </a>
+                    <a href="#" id="menuReset" class="menu-item danger">
+                        <span>Сброс данных</span>
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Модальное окно -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <h3 id="modalTitle"></h3>
+                <div id="modalBody"></div>
+                <div class="modal-actions">
+                    <button class="btn-secondary" id="modalCancel">Отмена</button>
+                    <button class="btn-primary" id="modalConfirm">Подтвердить</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальное окно с формой -->
+        <div id="formModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="formModalTitle"></h3>
+                    <button class="close-modal" id="closeFormModal">×</button>
+                </div>
+                <form id="formModalForm" class="form">
+                    <div id="formModalBody"></div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" id="formModalCancel">Отмена</button>
+                        <button type="submit" class="btn-primary">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="importFile" accept=".json" style="display: none;">
+
+    <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('Service Worker registered'))
+                .catch(err => console.log('Service Worker registration failed'));
+        }
+    </script>
+</body>
+</html>
