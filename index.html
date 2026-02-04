@@ -53,6 +53,12 @@
                         </svg>
                         <span>Расход</span>
                     </button>
+                    <button class="quick-btn transfer" id="addTransferBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M7 16l-4-4m0 0l4-4m-4 4h18M17 8l4 4m0 0l-4 4"></path>
+                        </svg>
+                        <span>Перевод</span>
+                    </button>
                 </div>
 
                 <!-- Всплывающая панель статистики -->
@@ -108,11 +114,74 @@
                 </div>
             </section>
 
+            <!-- Бюджеты -->
+            <section id="budgetsView" class="view">
+                <div class="view-header">
+                    <button class="back-btn" id="backFromBudgets">←</button>
+                    <h2>Бюджеты</h2>
+                </div>
+
+                <div class="budget-summary">
+                    <div class="budget-summary-item">
+                        <div class="budget-summary-label">Общий бюджет</div>
+                        <div class="budget-summary-value" id="totalBudget">0</div>
+                    </div>
+                    <div class="budget-summary-item">
+                        <div class="budget-summary-label">Потрачено</div>
+                        <div class="budget-summary-value" id="totalSpent">0</div>
+                    </div>
+                    <div class="budget-summary-item">
+                        <div class="budget-summary-label">Осталось</div>
+                        <div class="budget-summary-value accent" id="totalRemaining">0</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Бюджеты по категориям</h2>
+                        <button class="add-btn" id="addBudgetBtn">+</button>
+                    </div>
+                    <div id="budgetsList" class="budgets-list"></div>
+                </div>
+
+                <div class="budget-info-box">
+                    <p>💡 Установите лимиты расходов для каждой категории, чтобы контролировать траты</p>
+                </div>
+            </section>
+
+            <!-- Финансовые цели -->
+            <section id="goalsView" class="view">
+                <div class="view-header">
+                    <button class="back-btn" id="backFromGoals">←</button>
+                    <h2>Финансовые цели</h2>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Мои цели</h2>
+                        <button class="add-btn" id="addGoalBtn">+</button>
+                    </div>
+                    <div id="goalsList" class="goals-list"></div>
+                </div>
+
+                <div class="budget-info-box">
+                    <p>🎯 Создавайте цели накопления и отслеживайте прогресс</p>
+                </div>
+            </section>
+
             <!-- История операций -->
             <section id="historyView" class="view">
                 <div class="view-header">
                     <button class="back-btn" id="backFromHistory">←</button>
                     <h2>История операций</h2>
+                </div>
+
+                <button class="btn-primary mb-2" id="manageRecurringBtn" style="width: 100%;">
+                    🔄 Повторяющиеся операции
+                </button>
+
+                <div class="search-box">
+                    <input type="text" id="searchTransactions" placeholder="🔍 Поиск по категории, комментарию, сумме...">
                 </div>
 
                 <div class="history-filters">
@@ -129,6 +198,95 @@
                 </div>
 
                 <div id="historyList" class="history-list"></div>
+            </section>
+
+            <!-- Статистика -->
+            <section id="statisticsView" class="view">
+                <div class="view-header">
+                    <button class="back-btn" id="backFromStatistics">←</button>
+                    <h2>Статистика</h2>
+                </div>
+
+                <div class="stats-period-selector">
+                    <button class="period-btn active" data-period="month">Месяц</button>
+                    <button class="period-btn" data-period="quarter">3 месяца</button>
+                    <button class="period-btn" data-period="year">Год</button>
+                </div>
+
+                <!-- Сводка -->
+                <div class="stats-summary-cards">
+                    <div class="summary-card">
+                        <div class="summary-label">Доходы</div>
+                        <div class="summary-value income" id="summaryIncome">0</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Расходы</div>
+                        <div class="summary-value expense" id="summaryExpense">0</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Разница</div>
+                        <div class="summary-value" id="summaryDifference">0</div>
+                    </div>
+                </div>
+
+                <!-- График баланса -->
+                <div class="chart-container">
+                    <h3 class="chart-title">Динамика баланса</h3>
+                    <canvas id="balanceChart"></canvas>
+                </div>
+
+                <!-- График доходов и расходов -->
+                <div class="chart-container">
+                    <h3 class="chart-title">Доходы и расходы</h3>
+                    <canvas id="incomeExpenseChart"></canvas>
+                </div>
+
+                <!-- Круговая диаграмма расходов по категориям -->
+                <div class="chart-container">
+                    <h3 class="chart-title">Расходы по категориям</h3>
+                    <canvas id="categoryChart"></canvas>
+                </div>
+
+                <!-- Топ категорий -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Топ-5 категорий расходов</h2>
+                    </div>
+                    <div id="topCategoriesList" class="top-categories-list"></div>
+                </div>
+
+                <!-- Средние показатели -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Средние показатели</h2>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <div class="stat-box-label">Средний доход в день</div>
+                            <div class="stat-box-value" id="avgDailyIncome">0</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-box-label">Средний расход в день</div>
+                            <div class="stat-box-value" id="avgDailyExpense">0</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-box-label">Коэффициент сбережений</div>
+                            <div class="stat-box-value" id="savingsRate">0%</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-box-label">Самая большая трата</div>
+                            <div class="stat-box-value" id="maxExpense">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Сравнение периодов -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Сравнение с прошлым периодом</h2>
+                    </div>
+                    <div id="comparisonSection" class="comparison-section"></div>
+                </div>
             </section>
 
             <!-- Управление активами -->
@@ -201,6 +359,11 @@
                     <button class="back-btn" id="backFromTransaction">←</button>
                     <h2 id="transactionTitle">Новая операция</h2>
                 </div>
+
+                <button class="btn-secondary mb-2" id="useTemplateBtn" style="width: 100%;">
+                    📋 Использовать шаблон
+                </button>
+
                 <form id="transactionForm" class="form">
                     <input type="hidden" id="transactionType">
                     
@@ -223,7 +386,8 @@
 
                     <div class="form-group">
                         <label>Категория</label>
-                        <input type="text" id="transactionCategory" placeholder="Например: Продукты">
+                        <input type="text" id="transactionCategory" placeholder="Например: Продукты" list="categoryList">
+                        <datalist id="categoryList"></datalist>
                     </div>
 
                     <div class="form-group">
@@ -231,7 +395,56 @@
                         <textarea id="transactionComment" rows="3" placeholder="Необязательно"></textarea>
                     </div>
 
-                    <button type="submit" class="btn-primary">Сохранить</button>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button type="submit" class="btn-primary" style="flex: 1;">Сохранить</button>
+                        <button type="button" class="btn-secondary" id="saveAsTemplateBtn">💾 Как шаблон</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Форма перевода -->
+            <section id="transferView" class="view">
+                <div class="view-header">
+                    <button class="back-btn" id="backFromTransfer">←</button>
+                    <h2 id="transferTitle">Перевод между активами</h2>
+                </div>
+                <form id="transferForm" class="form">
+                    <div class="form-group">
+                        <label>Откуда</label>
+                        <select id="transferFrom" required>
+                            <option value="">Выберите источник</option>
+                        </select>
+                    </div>
+
+                    <div class="transfer-arrow">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"></path>
+                        </svg>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Куда</label>
+                        <select id="transferTo" required>
+                            <option value="">Выберите получателя</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Сумма</label>
+                        <input type="number" id="transferAmount" placeholder="0" step="0.01" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Дата</label>
+                        <input type="date" id="transferDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Комментарий</label>
+                        <textarea id="transferComment" rows="3" placeholder="Например: Пополнение накоплений"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Выполнить перевод</button>
                 </form>
             </section>
         </main>
@@ -247,6 +460,15 @@
                     <a href="#" id="menuDashboard" class="menu-item">
                         <span>Дашборд</span>
                     </a>
+                    <a href="#" id="menuGoals" class="menu-item">
+                        <span>Цели</span>
+                    </a>
+                    <a href="#" id="menuBudgets" class="menu-item">
+                        <span>Бюджеты</span>
+                    </a>
+                    <a href="#" id="menuStatistics" class="menu-item">
+                        <span>Статистика</span>
+                    </a>
                     <a href="#" id="menuHistory" class="menu-item">
                         <span>История операций</span>
                     </a>
@@ -257,11 +479,22 @@
                         <span>Калькулятор вкладов</span>
                     </a>
                     <div class="menu-divider"></div>
+                    <div class="theme-switcher">
+                        <span style="font-size: 0.875rem; color: var(--text-secondary);">Тема оформления</span>
+                        <div class="theme-buttons">
+                            <button class="theme-btn active" data-theme="dark">🌙 Темная</button>
+                            <button class="theme-btn" data-theme="light">☀️ Светлая</button>
+                        </div>
+                    </div>
+                    <div class="menu-divider"></div>
                     <a href="#" id="menuExport" class="menu-item">
-                        <span>Экспорт данных</span>
+                        <span>📤 Экспорт данных</span>
+                    </a>
+                    <a href="#" id="menuExportCSV" class="menu-item">
+                        <span>📊 Экспорт в CSV</span>
                     </a>
                     <a href="#" id="menuImport" class="menu-item">
-                        <span>Импорт данных</span>
+                        <span>📥 Импорт данных</span>
                     </a>
                     <a href="#" id="menuReset" class="menu-item danger">
                         <span>Сброс данных</span>
@@ -302,6 +535,7 @@
 
     <input type="file" id="importFile" accept=".json" style="display: none;">
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
     <script src="app.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
