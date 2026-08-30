@@ -1,548 +1,234 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#1a1a1a">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Молия</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="icon-192.png">
-    <link rel="apple-touch-icon" href="icon-192.png">
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Darsio.uz — репетиторы и учебные центры Узбекистана</title>
+<meta name="description" content="Darsio.uz — каталог репетиторов и учебных центров Узбекистана с расписанием и связью с родителями. Скоро запуск. Ранний доступ для репетиторов.">
+<meta property="og:title" content="Darsio.uz — репетиторы и учебные центры Узбекистана">
+<meta property="og:description" content="Каталог, расписание занятий и уведомления родителям в Telegram. Запуск скоро — ранний доступ для репетиторов уже открыт.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://darsio.uz/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2316295E'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='36' font-weight='700' fill='%23FAFAF7' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAFAF7;
+    --grid:#E7EAF1;
+    --ink:#16295E;
+    --ink-soft:#4A5878;
+    --margin-red:#E0596B;
+    --sky:#1FA0B8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Golos Text',system-ui,sans-serif;
+    color:var(--ink);
+    background:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+      var(--paper);
+    background-size:28px 28px, 28px 28px, auto;
+    min-height:100vh;
+  }
+  /* поля тетради — вертикальная линия слева */
+  .sheet{
+    position:relative;
+    max-width:880px;
+    margin:0 auto;
+    padding:0 28px 64px 56px;
+  }
+  .sheet::before{
+    content:"";
+    position:absolute;
+    top:0;bottom:0;left:28px;
+    width:2px;
+    background:var(--margin-red);
+    opacity:.55;
+  }
+  @media (max-width:560px){
+    .sheet{padding-left:40px;padding-right:20px}
+    .sheet::before{left:20px}
+  }
+
+  header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:26px 0 0;
+  }
+  .wordmark{
+    font-family:'Unbounded',sans-serif;
+    font-weight:700;font-size:1.35rem;letter-spacing:-.01em;
+    color:var(--ink);text-decoration:none;
+  }
+  .wordmark span{color:var(--sky)}
+  .lang{
+    display:flex;gap:2px;border:1.5px solid var(--ink);border-radius:999px;overflow:hidden;
+  }
+  .lang button{
+    font-family:inherit;font-size:.85rem;font-weight:600;
+    padding:6px 14px;border:0;background:transparent;color:var(--ink);cursor:pointer;
+  }
+  .lang button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+  .lang button:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+
+  main{padding-top:9vh}
+  h1{
+    font-family:'Unbounded',sans-serif;
+    font-weight:700;
+    font-size:clamp(1.7rem, 4.6vw, 2.9rem);
+    line-height:1.18;
+    letter-spacing:-.015em;
+    max-width:17ch;
+  }
+  .sub{
+    margin-top:22px;
+    font-size:clamp(1.02rem, 2vw, 1.2rem);
+    line-height:1.6;
+    color:var(--ink-soft);
+    max-width:52ch;
+  }
+  .cta{
+    margin-top:38px;
+    display:flex;flex-wrap:wrap;gap:14px;
+  }
+  .btn{
+    font-family:inherit;font-weight:600;font-size:1rem;
+    text-decoration:none;text-align:center;
+    padding:15px 26px;border-radius:12px;
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .btn:focus-visible{outline:3px solid var(--sky);outline-offset:3px}
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{
+    background:var(--ink);color:var(--paper);
+    box-shadow:0 4px 0 #0D1B45;
+  }
+  .btn-primary:hover{box-shadow:0 2px 0 #0D1B45;transform:translateY(2px)}
+  .btn-secondary{
+    background:transparent;color:var(--ink);
+    border:2px solid var(--ink);
+  }
+  .btn-secondary:hover{background:rgba(22,41,94,.06)}
+  .cta-note{
+    margin-top:14px;font-size:.9rem;color:var(--ink-soft);max-width:48ch;line-height:1.5;
+  }
+
+  .lines{
+    margin-top:9vh;
+    border-top:2px solid var(--ink);
+    max-width:640px;
+  }
+  .line{
+    display:grid;grid-template-columns:112px 1fr;gap:18px;
+    padding:20px 0;border-bottom:1px solid var(--grid);
+    align-items:baseline;
+  }
+  .line b{font-weight:600}
+  .line .who{color:var(--sky);font-weight:600;font-size:.95rem}
+  .line p{color:var(--ink-soft);line-height:1.55;font-size:.98rem}
+  @media (max-width:560px){
+    .line{grid-template-columns:1fr;gap:4px}
+  }
+
+  footer{
+    margin-top:11vh;
+    font-size:.88rem;color:var(--ink-soft);
+    display:flex;flex-wrap:wrap;gap:8px 22px;
+  }
+  footer a{color:var(--ink-soft)}
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important}
+  }
+</style>
 </head>
 <body>
-    <!-- Главный экран -->
-    <div id="app" class="app">
-        <!-- Заголовок -->
-        <header class="header">
-            <h1 class="logo">Молия</h1>
-            <button class="icon-btn" id="menuBtn">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="1"></circle>
-                    <circle cx="12" cy="5" r="1"></circle>
-                    <circle cx="12" cy="19" r="1"></circle>
-                </svg>
-            </button>
-        </header>
+<div class="sheet">
+  <header>
+    <a class="wordmark" href="/">Darsio<span>.uz</span></a>
+    <nav class="lang" aria-label="Til / Язык">
+      <button type="button" data-setlang="ru" aria-pressed="true">Рус</button>
+      <button type="button" data-setlang="uz" aria-pressed="false">O‘zb</button>
+    </nav>
+  </header>
 
-        <!-- Основной контент -->
-        <main class="main" id="mainContent">
-            <!-- Календарь (главная страница) -->
-            <section id="calendarView" class="view active">
-                <div class="calendar-header">
-                    <button class="nav-btn" id="prevMonth">‹</button>
-                    <h2 id="currentMonth">Январь 2026</h2>
-                    <button class="nav-btn" id="nextMonth">›</button>
-                </div>
-                
-                <div class="calendar-grid" id="calendarGrid"></div>
-                
-                <div class="quick-actions">
-                    <button class="quick-btn income" id="addIncomeBtn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 5v14M5 12h14"></path>
-                        </svg>
-                        <span>Доход</span>
-                    </button>
-                    <button class="quick-btn expense" id="addExpenseBtn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14"></path>
-                        </svg>
-                        <span>Расход</span>
-                    </button>
-                    <button class="quick-btn transfer" id="addTransferBtn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M7 16l-4-4m0 0l4-4m-4 4h18M17 8l4 4m0 0l-4 4"></path>
-                        </svg>
-                        <span>Перевод</span>
-                    </button>
-                </div>
+  <main>
+    <h1 data-ru="Репетиторы Узбекистана — на одной платформе"
+        data-uz="O‘zbekiston repetitorlari — bitta platformada">Репетиторы Узбекистана — на одной платформе</h1>
 
-                <!-- Всплывающая панель статистики -->
-                <div class="stats-panel" id="statsPanel">
-                    <div class="stats-header">
-                        <h3 id="statsTitle">Статистика</h3>
-                        <button class="close-stats" id="closeStats">×</button>
-                    </div>
-                    <div class="stats-content">
-                        <div class="stat-item">
-                            <span class="stat-label">Доходы</span>
-                            <span class="stat-value income" id="statsIncome">0</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Расходы</span>
-                            <span class="stat-value expense" id="statsExpense">0</span>
-                        </div>
-                        <div class="stat-divider"></div>
-                        <div class="stat-item">
-                            <span class="stat-label">Итого</span>
-                            <span class="stat-value" id="statsTotal">0</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Список операций -->
-                    <div id="statsTransactions" class="stats-transactions"></div>
-                </div>
-            </section>
+    <p class="sub"
+       data-ru="Darsio — это каталог репетиторов и учебных центров, расписание занятий и уведомления родителям в Telegram. Мы готовим запуск. Подпишитесь, чтобы не пропустить."
+       data-uz="Darsio — repetitorlar va o‘quv markazlari katalogi, dars jadvali va ota-onalarga Telegram orqali xabarnomalar. Tez orada ishga tushamiz. Obuna bo‘ling va birinchilardan xabar toping.">
+       Darsio — это каталог репетиторов и учебных центров, расписание занятий и уведомления родителям в Telegram. Мы готовим запуск. Подпишитесь, чтобы не пропустить.</p>
 
-            <!-- Дашборд -->
-            <section id="dashboardView" class="view">
-                <div class="balance-card">
-                    <div class="balance-label">Общий баланс</div>
-                    <div class="balance-amount" id="totalBalance">0</div>
-                    <div class="balance-currency">сум</div>
-                </div>
-
-                <div class="sections">
-                    <div class="section">
-                        <div class="section-header">
-                            <h2>Активы</h2>
-                            <button class="add-btn" id="addAssetBtn">+</button>
-                        </div>
-                        <div id="assetsList" class="items-list"></div>
-                    </div>
-
-                    <div class="section">
-                        <div class="section-header">
-                            <h2>Последние операции</h2>
-                        </div>
-                        <div id="transactionsList" class="transactions-list"></div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Бюджеты -->
-            <section id="budgetsView" class="view">
-                <div class="view-header">
-                    <button class="back-btn" id="backFromBudgets">←</button>
-                    <h2>Бюджеты</h2>
-                </div>
-
-                <div class="budget-summary">
-                    <div class="budget-summary-item">
-                        <div class="budget-summary-label">Общий бюджет</div>
-                        <div class="budget-summary-value" id="totalBudget">0</div>
-                    </div>
-                    <div class="budget-summary-item">
-                        <div class="budget-summary-label">Потрачено</div>
-                        <div class="budget-summary-value" id="totalSpent">0</div>
-                    </div>
-                    <div class="budget-summary-item">
-                        <div class="budget-summary-label">Осталось</div>
-                        <div class="budget-summary-value accent" id="totalRemaining">0</div>
-                    </div>
-                </div>
-
-                <div class="section">
-                    <div class="section-header">
-                        <h2>Бюджеты по категориям</h2>
-                        <button class="add-btn" id="addBudgetBtn">+</button>
-                    </div>
-                    <div id="budgetsList" class="budgets-list"></div>
-                </div>
-
-                <div class="budget-info-box">
-                    <p>💡 Установите лимиты расходов для каждой категории, чтобы контролировать траты</p>
-                </div>
-            </section>
-
-            <!-- Финансовые цели -->
-            <section id="goalsView" class="view">
-                <div class="view-header">
-                    <button class="back-btn" id="backFromGoals">←</button>
-                    <h2>Финансовые цели</h2>
-                </div>
-
-                <div class="section">
-                    <div class="section-header">
-                        <h2>Мои цели</h2>
-                        <button class="add-btn" id="addGoalBtn">+</button>
-                    </div>
-                    <div id="goalsList" class="goals-list"></div>
-                </div>
-
-                <div class="budget-info-box">
-                    <p>🎯 Создавайте цели накопления и отслеживайте прогресс</p>
-                </div>
-            </section>
-
-            <!-- История операций -->
-            <section id="historyView" class="view">
-                <div class="view-header">
-                    <button class="back-btn" id="backFromHistory">←</button>
-                    <h2>История операций</h2>
-                </div>
-
-                <button class="btn-primary mb-2" id="manageRecurringBtn" style="width: 100%;">
-                    🔄 Повторяющиеся операции
-                </button>
-
-                <div class="search-box">
-                    <input type="text" id="searchTransactions" placeholder="🔍 Поиск по категории, комментарию, сумме...">
-                </div>
-
-                <div class="history-filters">
-                    <select id="historyFilter" class="filter-select">
-                        <option value="all">Все операции</option>
-                        <option value="income">Только доходы</option>
-                        <option value="expense">Только расходы</option>
-                    </select>
-                    <select id="historyPeriod" class="filter-select">
-                        <option value="all">За все время</option>
-                        <option value="month">Текущий месяц</option>
-                        <option value="week">Последняя неделя</option>
-                    </select>
-                </div>
-
-                <div id="historyList" class="history-list"></div>
-            </section>
-
-            <!-- Статистика -->
-            <section id="statisticsView" class="view">
-                <div class="view-header">
-                    <button class="back-btn" id="backFromStatistics">←</button>
-                    <h2>Статистика</h2>
-                </div>
-
-                <div class="stats-period-selector">
-                    <button class="period-btn active" data-period="month">Месяц</button>
-                    <button class="period-btn" data-period="quarter">3 месяца</button>
-                    <button class="period-btn" data-period="year">Год</button>
-                </div>
-
-                <!-- Сводка -->
-                <div class="stats-summary-cards">
-                    <div class="summary-card">
-                        <div class="summary-label">Доходы</div>
-                        <div class="summary-value income" id="summaryIncome">0</div>
-                    </div>
-                    <div class="summary-card">
-                        <div class="summary-label">Расходы</div>
-                        <div class="summary-value expense" id="summaryExpense">0</div>
-                    </div>
-                    <div class="summary-card">
-                        <div class="summary-label">Разница</div>
-                        <div class="summary-value" id="summaryDifference">0</div>
-                    </div>
-                </div>
-
-                <!-- График баланса -->
-                <div class="chart-container">
-                    <h3 class="chart-title">Динамика баланса</h3>
-                    <canvas id="balanceChart"></canvas>
-                </div>
-
-                <!-- График доходов и расходов -->
-                <div class="chart-container">
-                    <h3 class="chart-title">Доходы и расходы</h3>
-                    <canvas id="incomeExpenseChart"></canvas>
-                </div>
-
-                <!-- Круговая диаграмма расходов по категориям -->
-                <div class="chart-container">
-                    <h3 class="chart-title">Расходы по категориям</h3>
-                    <canvas id="categoryChart"></canvas>
-                </div>
-
-                <!-- Топ категорий -->
-                <div class="section">
-                    <div class="section-header">
-                        <h2>Топ-5 категорий расходов</h2>
-                    </div>
-                    <div id="topCategoriesList" class="top-categories-list"></div>
-                </div>
-
-                <!-- Средние показатели -->
-                <div class="section">
-                    <div class="section-header">
-                        <h2>Средние показатели</h2>
-                    </div>
-                    <div class="stats-grid">
-                        <div class="stat-box">
-                            <div class="stat-box-label">Средний доход в день</div>
-                            <div class="stat-box-value" id="avgDailyIncome">0</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-box-label">Средний расход в день</div>
-                            <div class="stat-box-value" id="avgDailyExpense">0</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-box-label">Коэффициент сбережений</div>
-                            <div class="stat-box-value" id="savingsRate">0%</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-box-label">Самая большая трата</div>
-                            <div class="stat-box-value" id="maxExpense">0</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Сравнение периодов -->
-                <div class="section">
-                    <div class="section-header">
-                        <h2>Сравнение с прошлым периодом</h2>
-                    </div>
-                    <div id="comparisonSection" class="comparison-section"></div>
-                </div>
-            </section>
-
-            <!-- Управление активами -->
-            <section id="assetsView" class="view">
-                <div class="view-header">
-                    <button class="back-btn" id="backFromAssets">←</button>
-                    <h2>Управление активами</h2>
-                </div>
-                
-                <div class="tabs">
-                    <button class="tab active" data-tab="banks">Банки</button>
-                    <button class="tab" data-tab="cards">Карты</button>
-                    <button class="tab" data-tab="cash">Наличные</button>
-                    <button class="tab" data-tab="deposits">Вклады</button>
-                    <button class="tab" data-tab="credits">Кредиты</button>
-                </div>
-
-                <div id="tabContent" class="tab-content"></div>
-            </section>
-
-            <!-- Калькулятор вкладов -->
-            <section id="depositCalculatorView" class="view">
-                <div class="view-header">
-                    <button class="back-btn" id="backFromCalculator">←</button>
-                    <h2>Калькулятор вкладов</h2>
-                </div>
-
-                <form id="calculatorForm" class="form">
-                    <div class="form-group">
-                        <label>Начальная сумма</label>
-                        <input type="number" id="calcAmount" placeholder="1000000" value="1000000" step="0.01" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Процентная ставка (годовая %)</label>
-                        <input type="number" id="calcRate" placeholder="14" step="0.01" value="14" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Срок (месяцев)</label>
-                        <input type="number" id="calcTerm" placeholder="12" value="12" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label style="display: flex; align-items: center; gap: 0.5rem;">
-                            <input type="checkbox" id="calcCapitalize" style="width: auto;">
-                            <span>Капитализация процентов</span>
-                        </label>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Пополнение 1 числа месяца</label>
-                        <input type="number" id="calcTopup1" placeholder="0" value="0" step="0.01">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Пополнение 15 числа месяца</label>
-                        <input type="number" id="calcTopup2" placeholder="0" value="0" step="0.01">
-                    </div>
-
-                    <button type="submit" class="btn-primary">Рассчитать</button>
-                </form>
-
-                <div id="calculatorResult" class="calculator-result"></div>
-            </section>
-
-            <!-- Форма транзакции -->
-            <section id="transactionView" class="view">
-                <div class="view-header">
-                    <button class="back-btn" id="backFromTransaction">←</button>
-                    <h2 id="transactionTitle">Новая операция</h2>
-                </div>
-
-                <button class="btn-secondary mb-2" id="useTemplateBtn" style="width: 100%;">
-                    📋 Использовать шаблон
-                </button>
-
-                <form id="transactionForm" class="form">
-                    <input type="hidden" id="transactionType">
-                    
-                    <div class="form-group">
-                        <label>Сумма</label>
-                        <input type="number" id="transactionAmount" placeholder="0" step="0.01" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Источник</label>
-                        <select id="transactionSource" required>
-                            <option value="">Выберите</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Дата</label>
-                        <input type="date" id="transactionDate" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Категория</label>
-                        <input type="text" id="transactionCategory" placeholder="Например: Продукты" list="categoryList">
-                        <datalist id="categoryList"></datalist>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Комментарий</label>
-                        <textarea id="transactionComment" rows="3" placeholder="Необязательно"></textarea>
-                    </div>
-
-                    <div style="display: flex; gap: 0.5rem;">
-                        <button type="submit" class="btn-primary" style="flex: 1;">Сохранить</button>
-                        <button type="button" class="btn-secondary" id="saveAsTemplateBtn">💾 Как шаблон</button>
-                    </div>
-                </form>
-            </section>
-
-            <!-- Форма перевода -->
-            <section id="transferView" class="view">
-                <div class="view-header">
-                    <button class="back-btn" id="backFromTransfer">←</button>
-                    <h2 id="transferTitle">Перевод между активами</h2>
-                </div>
-                <form id="transferForm" class="form">
-                    <div class="form-group">
-                        <label>Откуда</label>
-                        <select id="transferFrom" required>
-                            <option value="">Выберите источник</option>
-                        </select>
-                    </div>
-
-                    <div class="transfer-arrow">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"></path>
-                        </svg>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Куда</label>
-                        <select id="transferTo" required>
-                            <option value="">Выберите получателя</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Сумма</label>
-                        <input type="number" id="transferAmount" placeholder="0" step="0.01" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Дата</label>
-                        <input type="date" id="transferDate" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Комментарий</label>
-                        <textarea id="transferComment" rows="3" placeholder="Например: Пополнение накоплений"></textarea>
-                    </div>
-
-                    <button type="submit" class="btn-primary">Выполнить перевод</button>
-                </form>
-            </section>
-        </main>
-
-        <!-- Меню -->
-        <div id="menuOverlay" class="menu-overlay">
-            <div class="menu">
-                <button class="menu-close" id="closeMenu">×</button>
-                <nav class="menu-nav">
-                    <a href="#" id="menuCalendar" class="menu-item active">
-                        <span>Календарь</span>
-                    </a>
-                    <a href="#" id="menuDashboard" class="menu-item">
-                        <span>Дашборд</span>
-                    </a>
-                    <a href="#" id="menuGoals" class="menu-item">
-                        <span>Цели</span>
-                    </a>
-                    <a href="#" id="menuBudgets" class="menu-item">
-                        <span>Бюджеты</span>
-                    </a>
-                    <a href="#" id="menuStatistics" class="menu-item">
-                        <span>Статистика</span>
-                    </a>
-                    <a href="#" id="menuHistory" class="menu-item">
-                        <span>История операций</span>
-                    </a>
-                    <a href="#" id="menuAssets" class="menu-item">
-                        <span>Активы</span>
-                    </a>
-                    <a href="#" id="menuCalculator" class="menu-item">
-                        <span>Калькулятор вкладов</span>
-                    </a>
-                    <div class="menu-divider"></div>
-                    <div class="theme-switcher">
-                        <span style="font-size: 0.875rem; color: var(--text-secondary);">Тема оформления</span>
-                        <div class="theme-buttons">
-                            <button class="theme-btn active" data-theme="dark">🌙 Темная</button>
-                            <button class="theme-btn" data-theme="light">☀️ Светлая</button>
-                        </div>
-                    </div>
-                    <div class="menu-divider"></div>
-                    <a href="#" id="menuExport" class="menu-item">
-                        <span>📤 Экспорт данных</span>
-                    </a>
-                    <a href="#" id="menuExportCSV" class="menu-item">
-                        <span>📊 Экспорт в CSV</span>
-                    </a>
-                    <a href="#" id="menuImport" class="menu-item">
-                        <span>📥 Импорт данных</span>
-                    </a>
-                    <a href="#" id="menuReset" class="menu-item danger">
-                        <span>Сброс данных</span>
-                    </a>
-                </nav>
-            </div>
-        </div>
-
-        <!-- Модальное окно -->
-        <div id="modal" class="modal">
-            <div class="modal-content">
-                <h3 id="modalTitle"></h3>
-                <div id="modalBody"></div>
-                <div class="modal-actions">
-                    <button class="btn-secondary" id="modalCancel">Отмена</button>
-                    <button class="btn-primary" id="modalConfirm">Подтвердить</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Модальное окно с формой -->
-        <div id="formModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 id="formModalTitle"></h3>
-                    <button class="close-modal" id="closeFormModal">×</button>
-                </div>
-                <form id="formModalForm" class="form">
-                    <div id="formModalBody"></div>
-                    <div class="modal-actions">
-                        <button type="button" class="btn-secondary" id="formModalCancel">Отмена</button>
-                        <button type="submit" class="btn-primary">Сохранить</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+    <div class="cta">
+      <a class="btn btn-primary" href="https://t.me/darsio_uz_bot" rel="noopener"
+         data-ru="Я репетитор — хочу ранний доступ"
+         data-uz="Men repetitorman — erta kirish istayman">Я репетитор — хочу ранний доступ</a>
+      <a class="btn btn-secondary" href="https://t.me/darsio_uz" rel="noopener"
+         data-ru="Подписаться на канал"
+         data-uz="Kanalga obuna bo‘lish">Подписаться на канал</a>
     </div>
+    <p class="cta-note"
+       data-ru="Репетиторы раннего доступа первыми попадут в каталог и получат бесплатное размещение анкеты."
+       data-uz="Erta kirishdagi repetitorlar katalogga birinchi bo‘lib qo‘shiladi va anketasini bepul joylashtiradi.">
+       Репетиторы раннего доступа первыми попадут в каталог и получат бесплатное размещение анкеты.</p>
 
-    <input type="file" id="importFile" accept=".json" style="display: none;">
+    <section class="lines" aria-label="Что будет в Darsio">
+      <div class="line">
+        <span class="who" data-ru="Ученикам" data-uz="O‘quvchilarga">Ученикам</span>
+        <p data-ru="Поиск репетитора по предмету, району и цене — с настоящими отзывами и записью на пробное занятие."
+           data-uz="Fan, tuman va narx bo‘yicha repetitor qidirish — haqiqiy sharhlar va sinov darsiga yozilish bilan.">
+           Поиск репетитора по предмету, району и цене — с настоящими отзывами и записью на пробное занятие.</p>
+      </div>
+      <div class="line">
+        <span class="who" data-ru="Родителям" data-uz="Ota-onalarga">Родителям</span>
+        <p data-ru="Расписание ребёнка, посещаемость и остаток занятий — в Telegram, без звонков и переспрашиваний."
+           data-uz="Farzandingiz jadvali, davomati va qolgan darslar — Telegram orqali, qo‘ng‘iroqlarsiz.">
+           Расписание ребёнка, посещаемость и остаток занятий — в Telegram, без звонков и переспрашиваний.</p>
+      </div>
+      <div class="line">
+        <span class="who" data-ru="Репетиторам" data-uz="Repetitorlarga">Репетиторам</span>
+        <p data-ru="Анкета в каталоге плюс рабочий кабинет: ученики, расписание, отметка посещаемости в два касания."
+           data-uz="Katalogda anketa va ish kabineti: o‘quvchilar, jadval, davomatni ikki bosishda belgilash.">
+           Анкета в каталоге плюс рабочий кабинет: ученики, расписание, отметка посещаемости в два касания.</p>
+      </div>
+      <div class="line">
+        <span class="who" data-ru="Центрам" data-uz="Markazlarga">Центрам</span>
+        <p data-ru="Страница центра с курсами и ценами — ученики находят вас сами."
+           data-uz="Kurslar va narxlar bilan markaz sahifasi — o‘quvchilar sizni o‘zlari topadi.">
+           Страница центра с курсами и ценами — ученики находят вас сами.</p>
+      </div>
+    </section>
+  </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
-    <script src="app.js"></script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('Service Worker registered'))
-                .catch(err => console.log('Service Worker registration failed'));
-        }
-    </script>
+  <footer>
+    <span>© 2026 Darsio.uz</span>
+    <a href="https://t.me/darsio_uz" rel="noopener">Telegram</a>
+    <a href="https://instagram.com/darsio_uz" rel="noopener">Instagram</a>
+  </footer>
+</div>
+
+<script>
+  (function(){
+    var buttons = document.querySelectorAll('[data-setlang]');
+    function setLang(lang){
+      document.documentElement.lang = (lang === 'uz') ? 'uz' : 'ru';
+      document.querySelectorAll('[data-ru]').forEach(function(el){
+        el.textContent = el.getAttribute('data-' + lang) || el.getAttribute('data-ru');
+      });
+      buttons.forEach(function(b){
+        b.setAttribute('aria-pressed', String(b.getAttribute('data-setlang') === lang));
+      });
+    }
+    buttons.forEach(function(b){
+      b.addEventListener('click', function(){ setLang(b.getAttribute('data-setlang')); });
+    });
+    var q = new URLSearchParams(location.search).get('lang');
+    if (q === 'uz') setLang('uz');
+  })();
+</script>
 </body>
 </html>
